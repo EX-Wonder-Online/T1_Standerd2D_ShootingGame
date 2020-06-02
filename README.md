@@ -3,17 +3,65 @@
 1. プロジェクトの準備
 	1. プロジェクトの作成 
     
-     プロジェクトを作成するには，Unity Hubを起動した時に表示される画面から<font color="Blue">新規作成</font>をクリックする．
+     プロジェクトを作成するには，Unity Hubを起動した時に表示される画面から**新規作成**をクリックする．
      
      ![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
      
+     **新規作成**をクリックすると，プロジェクトの設定画面に進みます．
+     プロジェクト名を「**2DShootingGame**」にしよう．ここでは2Dゲームを制作するので，下の画像をみながら設定をしよう！
+          
+     ![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
      
+     画面右下にある青色の**作成**ボタンをクリックすると，指定したフォルダにプロジェクトが作成され，Unityエディタが起動するよ．
+     
+     ![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+     
+     上のの画面が出てきたらOK!
      
 	1. プロジェクトに素材を追加する
+    
+    Unityエディタが起動したら，今回のゲームで使用する素材をプロジェクトに追加していこう．下の青文字をクリックして，素材をダンロードできるよ．
+    
+    [今回使う素材](https://qiita.com)
+    
+    ダウンロードされた**2DShootingAssets**をUnityエディタにドラック&ドロップしよう！
+    
+    ![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+    
+    使用する素材の形式と役割
+    
+	| ファイル名 | 形式 | 役割 |
+	|:--------:|--------:|:--------|
+	| Rocket.png | pngファイル | ロケットの画像 |
+	| Rock.png | pngファイル | 隕石の画像 |
+    | Bullet.png | pngファイル | 弾の画像 |
+    | BackGround.png | pngファイル | 背景の画像 |
+    | Title.png | pngファイル | ゲームのタイトルの画像 |
+    | GameOver.png | pngファイル | ゲームオーバーの画像 |
+    | StartButton.png | pngファイル | スタートボタンの画像 |
+    | ReStartButton.png | pngファイル | リスタートボタンの画像 |
 
 1. スマートフォン用に設定する
+	1. ビルドの設定
+    
+    スマートフォンようにビルドするための設定を行いましょう．
+    ツールバーから**File→Build Settings**を設定しよう．
+    **Build Settings**ウィンドウが開くので，**Platform**欄から**Android**を選択し，**Switch Platform**ボタンをクリックします．
+    
+    ![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+    
+    このように**Android*に設定することで，簡単に様々なプロジェクト向けにプロジェクトを作成できます．
+    設定が終わったら，**Build Settings**ウィンドウは閉じて大丈夫です．
+    
 	1. 画面サイズの設定
- 
+	
+    次に，**ゲームの画面サイズ**を設定します．**Game**タブをクリックし，ゲームビュー左上にある画面サイズ設定(Aspect)のドロップダウンリストを開きます．そこからスマートフォンによって画面のサイズが異なるので，対象となるスマートフォンの画面サイズに合わせたものを選択してください．ここでは，「**1280x720 Portrait**」を選択します．
+    
+    ![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+    
+    **Scene**タブを見ると，画面サイズが変更されていることを確認します．
+    シーンビュー内で，白の四角で表示査定ている範囲が，ゲーム画面の範囲です．
+    
 1. シーンを作成
 
 1. シーンにオブジェクトを配置しよう
@@ -77,5 +125,7 @@
 4. 得点をつけよう
 5. 見過ごした石が一定個数になるとゲームオーバーにしよう
 6. ゲームクリアについて考えてみよう
+
+
 
 
