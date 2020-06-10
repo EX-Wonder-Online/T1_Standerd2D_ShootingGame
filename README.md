@@ -284,7 +284,7 @@ public class BulletGenerator : MonoBehaviour
 }
 ```
 
-ジェネレータにスクリプトをアタッチしよう．
+弾ジェネレータにスクリプトをアタッチしよう．
 
 #### ジェネレータにPrefabを渡す
 このままだと，ジェネレータは設計図（Prefab）を知らないので，実行しても弾はでないよ．ヒエラルキーウィンドウの「BulletGenerator」を選択し，以下のように弾のプレファブを設定する．
@@ -298,25 +298,110 @@ public class BulletGenerator : MonoBehaviour
 ### 6-1. 石を落とそう
 
 #### 石プレファブの作成
+[弾の設定を参考](#弾プレファブの作成)にしてプレファブを作ろう！
 
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
 
 #### ジェネレータを配置
+次に，石のプレファブを製造する石ジェネレータを作成するよ．
+ヒエラルキーウィンドウの**Create→Create Empty**を選択します．名前を「StoneGenerator」に変更しよう．
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+
+位置を以下のように設定する．
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+
+次に，石を出す範囲をコライダーを用いて指定するよ．
+Box ColliderをAdd Componentして，以下のように設定しよう．
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
 
 #### ジェネレータのスクリプトを作成
 
-#### ジェネレータにスクリプトをアタッチ
+「StoneGenerator」を作成し，下のプログラムを入力しよう．
 
-#### ジェネレータにPrefabを渡す
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
+public class StoneGenerator : MonoBehaviour
+{
+    private float time;
+    [SerializeField]
+    private GameObject stonePrefab;
+    private GameObject stone;
+    private Vector2 stonePos;
+    private Vector2 pos;
+    private Vector3 size;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        time = 0;
+        pos = this.transform.position;
+        size = this.transform.localScale;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        time += Time.deltaTime;
+
+        if(time > 2.0f) {
+            stonePos.x = pos.x + Random.Range(-size.x / 2.0f, size.x / 2.0f);
+            stonePos.y = pos.y + Random.Range(-size.y / 2.0f, size.y / 2.0f);
+            stone = Instantiate(stonePrefab);
+            Destroy(stone, 2.0f);
+            stone.transform.position = stonePos;
+            stone.GetComponent<Rigidbody2D>().AddForce(Vector2.down * 10f, ForceMode2D.Impulse);
+
+            time = 0;
+        }
+        
+       
+    }
+}
+```
+
+石ジェネレーターにスクリプトをアタッチする．
+石ジェネレーターに石プレファブを教えてあげる．
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+
+動かしてみて，隕石が上から落ちてくるかな？
 	
 ### 6-2. 当たり判定をしよう
+このままでは，石と弾が当たっていても消えない．衝突したら自分自身を消えるようにそれぞれにスクリプトをアタッチする．
 
-#### 当たり判定のスクリプトを追加する
+#### 当たり判定のスクリプトを作成
+「CollideController」を作成し，下のプログラムを入力しよう．
 
-#### 弾と石にスクリプトをアタッチ
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-#### スクリプトにタグの名前を渡す
+public class CollideController : MonoBehaviour
+{
+    [SerializeField]
+    private string hitTag;
 
+    private void OnCollisionEnter2D(Collision2D collision) {
+        if(collision.gameObject.tag == hitTag) {
+            Destroy(this.gameObject);
+        }
+    }
+}
+
+```
+両方にアタッチし，hitTagをそれぞれぶつかった相手の名前をいれる．
+例えば，弾の場合，石のタグ名「Stone」をhitTagに入力する．
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+
+動かしてみて，ぶつかると消えるかな？
 
 ## 7. UIを作ろう
 1. ゲームオーバー画面を作ろう
