@@ -426,7 +426,8 @@ Canvasの中にImageが作成されているので，名前を「GameOver」に�
 ![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
 
 #### リトライボタンの配置
-[スタート画面のボタンを参考](#uiの配置)に配置しよう
+[スタート画面のボタンを参考](#uiの配置)に配置しよう．
+スタートボタンと同じように，リトライボタンもSceneManagerを使ってGameSceneを呼び出すよ！
 
 以下のように配置できたかな？
 
