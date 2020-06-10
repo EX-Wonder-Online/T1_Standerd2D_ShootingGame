@@ -153,35 +153,170 @@ public class SceneContrller : MonoBehaviour
 
 
 ### 4-2. シーンにオブジェクトを配置しよう
-[参考](#スプライトの配置)
+[スプライトの配置](#スプライトの配置)を参考にして，以下のようにしよう！
+
+背景が前に出てくるときは，BackgroundのInspectorの「**Order in Layer**」を-1にしよう．
+Order in layer … 描画する順番（後になるほど画像の前に表示される)
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
 
 ### 4-3. 無重力にしよう
-1.  プロジェクト設定の変更
-    
-## 5. プレイヤーを操作しよう
-1. プレイヤーを操作しよう
-	1. プレイヤーのスクリプトを作る
-	1.  プレイヤのスクリプトをアタッチする
+今回のゲームは宇宙空間のため，重力をなくす設定をするよ！
+ツールバーの**Edit→Project Settings**をクリック．
+すると，Project Settingsウィンドウが開くよ．
+次に，**Physics 2D→Gravity**の**Y**
+を**-9.8→0**に変更しよう．
+これにより，重力(Gravity)はなくなったよ！
 
-1. プレイヤーから弾を発射しよう
-	1. 弾プレファブの作成
-	1. ジェネレータを配置
-	1. ジェネレータのスクリプトを作成
-	1. ジェネレータにスクリプトをアタッチ
-	1. ジェネレータにPrefabを渡す
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+
+## 5. プレイヤーを操作しよう
+### 5-1. プレイヤーの設定
+
+### 5-2. タッチで操作できるようにしよう
+
+#### スクリプトの作成
+プロジェクトウィンドウ内で右クリックして**Create→C# Script**を選択し，ファイル名を「PlayerMove」に変換する．
+プロジェクトウィンドウの「**PlayerController**」をダブルクリックして開き，以下のスクリプトを入力・保存する．
+
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement; // シーンをロードする(LoadScene)を使うために必要
+
+public class PlayerMove : MonoBehaviour
+{
+	private Vector2 pos; // プレイヤーの現在の位置
+    private Vector2 mousePos; // マウスの位置
+    private float posX; // プレイヤーの次の状態のX座標
+    [SerializeField]
+    private float moveSpeed; // プレイヤーの移動速度[0 ~ 1]
+    [SerializeField]
+    private GameDirector gameDirector;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        pos = this.transform.position; // フレームごとに位置を取得
+
+        if (Input.GetMouseButton(0)) { // もし画面をタッチしたら
+            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition); // マウスの位置を取得
+        }
+        posX = Mathf.Lerp(pos.x, mousePos.x, moveSpeed); // 現在のX座標とマウスのX座標にだんだん変化させる
+        this.transform.position = new Vector2(posX, pos.y); // プレイヤーの位置を更新
+
+    }
+    
+}
+```
+
+#### スクリプトをプレイヤーにアタッチ
+先ほど作成した「PlayerMove」スクリプトをヒエラルキーウィンドウの「Player」オブジェクトにドラック＆ドロップでアタッチする．
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+
+ゲームをスタートしてタッチした場所に移動するかな？
+
+### 5-3. プレイヤーから弾を発射しよう
+
+#### 弾プレファブの作成
+弾をシーンウィンドウに出し，コライダーをちょうど良い設定に変更する．
+ヒエラルキーウィンドウ「Bullet」をプロジェクトウィンドウにドラッグ＆ドロップすると，弾のプレファブ（設計図）が作れます．
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+
+プレファブを作ったら，シーンに配置した弾のオブジェクトは必要ないため，削除します．ヒエラルキーウィンドウの**Bullet**を選択し，右クリック→Deleteで削除が行われます．
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+
+#### ジェネレータを配置
+次に，弾のプレファブを製造する弾ジェネレータを作成するよ．
+ヒエラルキーウィンドウの**Create→Create Empty**を選択します．名前を「BulletGenerator」に変更しよう．
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+
+プレイヤーに付いてきて欲しいので，「BulletGenerator」を「Player」の子オブジェクトにします．ヒエラルキーウィンドウのBulletGeneratorをPlayerにドラッグ＆ドロップすると，子オブジェクトにできるよ．
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+
+#### ジェネレータのスクリプトを作成
+
+「BulletGenerator」を作成し，下のプログラムを入力しよう．
+
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class BulletGenerator : MonoBehaviour
+{
+    private float time;
+    [SerializeField]
+    private GameObject bulletPrefab;
+    private GameObject bullet;
+
+    // Start is called before the first frame update
+    void Start() {
+        time = 0;
+    }
+
+    // Update is called once per frame
+    void Update() {
+        time += Time.deltaTime;
+
+        if (time > 0.4f) {
+            bullet = Instantiate(bulletPrefab);
+            bullet.transform.position = this.transform.position;
+            bullet.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 10f, ForceMode2D.Impulse);
+            Destroy(bullet, 2.0f);
+            time = 0;
+        }
+
+
+    }
+}
+```
+
+ジェネレータにスクリプトをアタッチしよう．
+
+#### ジェネレータにPrefabを渡す
+このままだと，ジェネレータは設計図（Prefab）を知らないので，実行しても弾はでないよ．ヒエラルキーウィンドウの「BulletGenerator」を選択し，以下のように弾のプレファブを設定する．
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+
+実行すると，弾が出たかな？
 	
 ## 6. 石を落とす設定をしよう
-1. 石を落とそう
-	1. 石プレファブの作成
-	1. ジェネレータを配置
-	1. ジェネレータのスクリプトを作成
-	1. ジェネレータにスクリプトをアタッチ
-	1. ジェネレータにPrefabを渡す
+
+### 6-1. 石を落とそう
+
+#### 石プレファブの作成
+
+
+#### ジェネレータを配置
+
+#### ジェネレータのスクリプトを作成
+
+#### ジェネレータにスクリプトをアタッチ
+
+#### ジェネレータにPrefabを渡す
+
 	
-1. 当たり判定をしよう
-	1. 当たり判定のスクリプトを作る
-	1. 弾と石にスクリプトをアタッチ
-	1. スクリプトにタグの名前を渡す
+### 6-2. 当たり判定をしよう
+
+#### 当たり判定のスクリプトを追加する
+
+#### 弾と石にスクリプトをアタッチ
+
+#### スクリプトにタグの名前を渡す
+
 
 ## 7. UIを作ろう
 1. ゲームオーバー画面を作ろう
@@ -189,7 +324,7 @@ public class SceneContrller : MonoBehaviour
 	1. リトライボタンの配置
 	1. 非アクティブにする
 	
-1. UIを操作する監督のを作ろう
+1. UIを操作する監督のを作ろう削除
 	1. 監督を配置
 	1. 監督のスクリプトを作る
 	1. 監督にスクリプトをアタッチ
