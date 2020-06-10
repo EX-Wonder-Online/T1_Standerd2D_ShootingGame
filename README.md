@@ -144,11 +144,17 @@ public class SceneContrller : MonoBehaviour
 ## 4. ゲーム画面を作ろう
 
 ### 4-1. シーンを作成
+ゲームシーンを作成します．
+今あるシーンをツールバーの**File→Save**で保存した後に，**File→New Scene**を選択すると，新しいシーンが作成されます．
+新しいシーンが作成されたら，**File→Save As**を選択し，「**GameScene**」という名前で保存しておきましょう．
+プロジェクトウィンドウ「**GameScene**」が作成されています．
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+
 
 ### 4-2. シーンにオブジェクトを配置しよう
-1.  プレイヤーの設置
-1.  背景の設置
-    
+[参考](#スプライトの配置)
+
 ### 4-3. 無重力にしよう
 1.  プロジェクト設定の変更
     
