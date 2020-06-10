@@ -404,16 +404,119 @@ public class CollideController : MonoBehaviour
 動かしてみて，ぶつかると消えるかな？
 
 ## 7. UIを作ろう
-1. ゲームオーバー画面を作ろう
-	1. ゲームオーバーの配置
-	1. リトライボタンの配置
-	1. 非アクティブにする
+
+### 7-1. ゲームオーバー画面を作ろう
+ここでは，ゲームオーバー画面をUIとして作成し，石がプレイヤーにぶつかると表示するように設定するよ．
+
+#### ゲームオーバーの配置
+まずは，タイトルを配置する．エラルキーウィンドウの**Create→UI→Image**を選択します．
+Canvasの中にImageが作成されているので，名前を「GameOver」に変更する．
+次に，Inspector→Image→Sorce Imageのoをクリックし，GameOverの画像を選択する．
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+
+画像が表示されたかな？
+次に画像の設定をしていくよ．
+このままだと，画像サイズがおかしいので，Inspector→Image→Image TypeをTiledに変更する．
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+
+次に，Inspector→Rect Transformを以下のように変更しよう．
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+
+#### リトライボタンの配置
+[スタート画面のボタンを参考](#uiの配置)に配置しよう
+
+以下のように配置できたかな？
+
+#### 非表示にしよう
+このままスタートすると，常に表示してしまうので，隠す必要がある．
+ヒエラルキーのCanvasをクリックし，インスペクターの左上にある．チェックボックスを外すと見えなくなるよ．
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
 	
-1. UIを操作する監督のを作ろう削除
-	1. 監督を配置
-	1. 監督のスクリプトを作る
-	1. 監督にスクリプトをアタッチ
-	1. 監督にゲームオーバーを伝えよう
+### 7-2. UIを操作する監督を作ろう
+役割を分けてプログラムを書くと，どこにエラーがあるのかや，同じような処理を２度書かなくてすむよ．そのために，今回はUIを操作する監督プログラムを作成するよ．
+
+#### 監督を配置
+ヒエラルキーウィンドウの**Create→Create Empty**を選択します．名前を「GameDirector」に変更しよう．
+
+#### 監督のスクリプトを作る
+次に，「GameDirector」を作成し，下のプログラムを入力しよう．
+
+ ```cs
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class GameDirector : MonoBehaviour
+{
+    [SerializeField]
+    private GameObject ui;
+
+    public void GameOver() {
+        ui.SetActive(true);
+    }
+}
+
+ ```
+ 保存したら，先ほどのスクリプトをGameDirectorに入れる．
+
+#### 監督にゲームオーバーを伝えよう
+次に，Playerは監督にゲームオーバーしたことをお知られするプログラムを追加するよ．「PlayerMove」を開いて以下のようにプログラムを追加しよう．
+
+```cs
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    private Vector2 pos; // プレイヤーの現在の位置
+    private Vector2 mousePos; // マウスの位置
+    private float posX; // プレイヤーの次の状態のX座標
+    [SerializeField]
+    private float moveSpeed; // プレイヤーの移動速度[0 ~ 1]
+    [SerializeField]
+    private GameDirector gameDirector;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        pos = this.transform.position; // フレームごとに位置を取得
+
+        if (Input.GetMouseButton(0)) { // もし画面をタッチしたら
+            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition); // マウスの位置を取得
+        }
+        posX = Mathf.Lerp(pos.x, mousePos.x, moveSpeed); // 現在のX座標とマウスのX座標にだんだん変化させる
+        this.transform.position = new Vector2(posX, pos.y); // プレイヤーの位置を更新
+
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision) {
+        if(collision.gameObject.tag == "Stone") {
+             gameDirector.GameOver();
+        }
+       
+    }
+}
+
+```
+次に，PlayerにGameDirectorを教えてあげよう！
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+
+動かして見よう！石にぶつかると，ゲームオーバー画面が出てきたかな？
+
+![Qiita logo](https://cdn.qiita.com/assets/siteid-reverse-6044901aace6435306ebd1fac6b7858c.png)
+
 
 ## 8. アレンジしよう
 1. 石が消える時に爆発のエフェクトを出そう
